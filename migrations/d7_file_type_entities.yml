@@ -1,0 +1,19 @@
+id: d7_file_type_entities
+label: D7 file type entities
+migration_tags:
+  - Drupal 7
+class: Drupal\file_type_migration\Plugin\migrate\FileEntity
+source:
+  plugin: d7_file_entity
+process:
+  mid: fid
+  # vid:
+  #   plugin: default_value
+  #   source: picture
+  #   default_value: null
+  bundle: type
+destination:
+  plugin: entity:media
+migration_dependencies:
+  required:
+    - d7_file
