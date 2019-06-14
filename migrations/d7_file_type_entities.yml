@@ -5,6 +5,9 @@ migration_tags:
 class: Drupal\file_type_migration\Plugin\migrate\FileEntity
 source:
   plugin: d7_file_entity
+  # type: image
+  # constants:
+  #   bundle: 'image'
 process:
   mid: fid
   # vid:
@@ -12,8 +15,52 @@ process:
   #   source: picture
   #   default_value: null
   bundle: type
+  name: origname
+  field_media_image:
+    plugin: sub_process
+    source: fid
+    process:
+      target_id:
+        -
+          plugin: migration_lookup
+          source: fid
+          migration: upgrade_d7_file
+      alt:
+        -
+          plugin: skip_on_empty
+          method: process
+          source: image_alt_text_value
+  field_media_audio_file:
+    plugin: sub_process
+    source: fid
+    process:
+      target_id:
+        -
+          plugin: migration_lookup
+          source: fid
+          migration: upgrade_d7_file
+  field_media_video_file:
+    plugin: sub_process
+    source: fid
+    process:
+      target_id:
+        -
+          plugin: migration_lookup
+          source: fid
+          migration: upgrade_d7_file
+
 destination:
   plugin: entity:media
 migration_dependencies:
   required:
+    - d7_field
+    - d7_field_instance
+    - d7_field_formatter_settings
+    - d7_field_instance_widget_settings
     - d7_file
+    - d7_view_modes
+  optional:
+    - d7_field_group
+    - d7_node_settings
+    - d7_node_type
+    - d7_comment_type

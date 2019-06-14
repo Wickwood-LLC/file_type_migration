@@ -19,8 +19,12 @@ class FileEntity extends FieldableEntity {
    * {@inheritdoc}
    */
   public function query() {
-    return $this->select('file_managed', 'f')
+    $query = $this->select('file_managed', 'f')
       ->fields('f');
+    if (isset($this->configuration['type'])) {
+      $query->condition('f.type', $this->configuration['type']);
+    }
+    return $query;
   }
 
   /**
@@ -39,6 +43,7 @@ class FileEntity extends FieldableEntity {
       'type' => $this->t('Language'),
       'origname' => $this->t('Original name of the file with no path components. Used by the filefield_paths module.'),
       'uuid' => $this->t('The Universally Unique Identifier.'),
+      'image_alt_text_value' => t('image_alt_text_value'),
     ];
 
     // // Profile fields.
@@ -56,16 +61,7 @@ class FileEntity extends FieldableEntity {
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
-    $uid = $row->getSourceProperty('fid');
-
-    // $roles = $this->select('users_roles', 'ur')
-    //   ->fields('ur', ['rid'])
-    //   ->condition('ur.uid', $uid)
-    //   ->execute()
-    //   ->fetchCol();
-    // $row->setSourceProperty('roles', $roles);
-
-    // $row->setSourceProperty('data', unserialize($row->getSourceProperty('data')));
+    $fid = $row->getSourceProperty('fid');
 
     // // If this entity was translated using Entity Translation, we need to get
     // // its source language to get the field values in the right language.
@@ -77,12 +73,12 @@ class FileEntity extends FieldableEntity {
     // $row->setSourceProperty('entity_language', $language);
 
     // Get Field API field values.
-    foreach ($this->getFields('file') as $field_name => $field) {
+    foreach ($this->getFields('file', $row->getSourceProperty('type')) as $field_name => $field) {
       // Ensure we're using the right language if the entity and the field are
       // translatable.
       // $field_language = $entity_translatable && $field['translatable'] ? $language : NULL;
       $field_language = NULL;
-      $row->setSourceProperty($field_name, $this->getFieldValues('file', $field_name, $uid, NULL, $field_language));
+      $row->setSourceProperty($field_name, $this->getFieldValues('file', $field_name, $fid, NULL, $field_language));
     }
 
     // Get profile field values. This code is lifted directly from the D6
