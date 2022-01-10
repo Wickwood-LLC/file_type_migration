@@ -16,33 +16,25 @@ process:
   name: filename
   created: timestamp
   changed: timestamp
-  field_media_image/target_id: fid
-  field_media_image/alt: field_file_image_alt_text/0/value
-  field_media_image/title: field_file_image_title_text/0/value
-  field_media_audio_file:
-    plugin: sub_process
+  'field_media_image/target_id':
+    plugin: migration_lookup
     source: fid
-    process:
-      target_id:
-        plugin: migration_lookup
-        source: fid
-        migration: upgrade_d7_file
-  field_media_video_file:
-    plugin: sub_process
+    migration: d7_file
+  'field_media_image/alt': field_file_image_alt_text/0/value
+  'field_media_image/title': field_file_image_title_text/0/value
+  'field_media_audio_file/target_id':
+    plugin: migration_lookup
     source: fid
-    process:
-      target_id:
-        plugin: migration_lookup
-        source: fid
-        migration: upgrade_d7_file
-  field_media_document:
-    plugin: sub_process
+    migration: d7_file
+  'field_media_video_file/target_id':
+    plugin: migration_lookup
     source: fid
-    process:
-      target_id:
-        plugin: migration_lookup
-        source: fid
-        migration: upgrade_d7_file
+    migration: d7_file
+  'field_media_document/target_id':
+    plugin: migration_lookup
+    source: fid
+    migration: d7_file
+  field_folder: field_folder
 destination:
   plugin: entity:media
 migration_dependencies:
