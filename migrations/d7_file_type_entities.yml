@@ -12,7 +12,12 @@ process:
   #   source: picture
   #   default_value: null
   uid: uid
-  bundle: type
+  bundle:
+    plugin: static_map
+    source: type
+    bypass: true
+    map:
+      video: remote_video
   name: filename
   created: timestamp
   changed: timestamp
@@ -23,6 +28,7 @@ process:
   'field_media_video_file/target_id': fid
   'field_media_document/target_id': fid
   field_folder: field_folder
+  'field_media_oembed_video/value': uri
 destination:
   plugin: entity:media
 migration_dependencies:
