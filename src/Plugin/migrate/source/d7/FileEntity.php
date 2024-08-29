@@ -90,7 +90,7 @@ class FileEntity extends FieldableEntity {
         $url = "https://www.youtube.com/watch?v=" . $matches[1];
       }
       else if (preg_match('|^vimeo\://v/(.*)|', $uri, $matches)) {
-        $url = "https://www.vimeo.com/" . $matches[1];
+        $url = "https://vimeo.com/" . $matches[1];
       }
 
       if (!empty($url)) {
