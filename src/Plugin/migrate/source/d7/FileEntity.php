@@ -81,6 +81,23 @@ class FileEntity extends FieldableEntity {
       $row->setSourceProperty($field_name, $this->getFieldValues('file', $field_name, $fid, NULL, $field_language));
     }
 
+    $uri = $row->getSourceProperty('uri');
+    if (!empty($uri)) {
+      if (preg_match('|^oembed\://(.*)|', $uri, $matches)) {
+        $url = urldecode($matches[1]);
+      }
+      else if (preg_match('|^youtube\://v/(.*)|', $uri, $matches)) {
+        $url = "https://www.youtube.com/watch?v=" . $matches[1];
+      }
+      else if (preg_match('|^vimeo\://v/(.*)|', $uri, $matches)) {
+        $url = "https://www.vimeo.com/" . $matches[1];
+      }
+
+      if (!empty($url)) {
+        $row->setSourceProperty('uri', $url);
+      }
+    }
+
     // Get profile field values. This code is lifted directly from the D6
     // ProfileFieldValues plugin.
     // if ($this->getDatabase()->schema()->tableExists('profile_value')) {
